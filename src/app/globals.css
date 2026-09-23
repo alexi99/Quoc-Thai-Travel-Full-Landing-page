@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (toggled by the theme switch in the header). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Brand palette */
+  --color-emerald-brand: #10b981;
+  --color-emerald-deep: #059669;
+  --color-gold: #d4a853;
+  --color-gold-deep: #b8873a;
+  --color-ocean: #1e3a5f;
+  --color-ocean-deep: #142840;
+  --color-cream: #fafaf5;
+  --color-mist: #f3f4f6;
+  --color-ink: #1f2937;
+
+  /* Typography */
+  --font-display: "Playfair Display", "Cormorant Garamond", ui-serif, Georgia,
+    "Songti SC", "Noto Serif CJK SC", "Apple SD Gothic Neo", serif;
+  --font-sans: "Inter", "DM Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+
+  --shadow-soft: 0 18px 40px -24px rgb(30 58 95 / 0.35);
+  --shadow-lift: 0 28px 60px -30px rgb(30 58 95 / 0.45);
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --page-bg: #fafaf5;
+    --page-fg: #1f2937;
+    --surface: #ffffff;
+    --surface-alt: #f3f4f6;
+    --border-soft: rgb(30 58 95 / 0.1);
+    --muted: #55617a;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --page-bg: #0d1726;
+    --page-fg: #eef2f7;
+    --surface: #142337;
+    --surface-alt: #101d2f;
+    --border-soft: rgb(255 255 255 / 0.12);
+    --muted: #a7b4c8;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Offset anchors so the sticky header never covers section titles. */
+    scroll-padding-top: 6.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--page-bg);
+    color: var(--page-fg);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.7;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Korean and Chinese need a slightly looser rhythm for legibility. */
+  html[lang="ko"] body {
+    line-height: 1.85;
+    word-break: keep-all;
+  }
+  html[lang^="zh"] body {
+    line-height: 1.8;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  html[lang="ko"] h1,
+  html[lang="ko"] h2,
+  html[lang="ko"] h3,
+  html[lang^="zh"] h1,
+  html[lang^="zh"] h2,
+  html[lang^="zh"] h3 {
+    line-height: 1.35;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-emerald-brand);
+    color: #fff;
+  }
+}
+
+@layer utilities {
+  .surface {
+    background-color: var(--surface);
+  }
+  .surface-alt {
+    background-color: var(--surface-alt);
+  }
+  .text-muted {
+    color: var(--muted);
+  }
+  .border-soft {
+    border-color: var(--border-soft);
+  }
+  .container-page {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 78rem;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 1024px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+  .text-balance-wrap {
+    text-wrap: balance;
+  }
+  .gold-gradient {
+    background-image: linear-gradient(135deg, #e6c47a 0%, #d4a853 45%, #b8873a 100%);
+  }
+  .emerald-gradient {
+    background-image: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  }
+  .ocean-gradient {
+    background-image: linear-gradient(160deg, #1e3a5f 0%, #142840 100%);
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ---------- Scroll reveal animation ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-float {
+  animation: floatY 3.5s ease-in-out infinite;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-fade-up {
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface-alt) 85%, #94a3b8);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.45),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-float,
+  .animate-fade-up,
+  .skeleton::after {
+    animation: none;
+  }
+}
